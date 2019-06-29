@@ -21,3 +21,39 @@ This is just a collection of small code snippet for android programmers. I am cr
     android:freezesText="true">
 ```
 ##### textView.setSelected(true) needs to be set in code behind for this to work.
+
+
+## Creating Bullets for TextView
+
+Check the class below:
+
+```
+public class BulletListBuilder {
+
+    private static final String SPACE = " ";
+    private static final String BULLET_SYMBOL = "&#8226";
+    private static final String EOL = System.getProperty("line.separator");
+    private static final String TAB = "\t";
+
+    private BulletListBuilder() {
+
+    }
+
+    public static String getBulletList(String header, String []items) {
+        StringBuilder listBuilder = new StringBuilder();
+        if (header != null && !header.isEmpty()) {
+            listBuilder.append(header + EOL + EOL);
+        }
+        if (items != null && items.length != 0) {
+            for (String item : items) {
+                Spanned formattedItem = Html.fromHtml(BULLET_SYMBOL + SPACE + item);
+                listBuilder.append(TAB + formattedItem + EOL);
+            }
+        }
+        return listBuilder.toString();
+    }
+
+}
+
+```
+##### To set the bullets to TextView just create a List of String and pass it to the above method and set the result of function to the TextView.
