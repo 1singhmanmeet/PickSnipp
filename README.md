@@ -57,3 +57,23 @@ public class BulletListBuilder {
 
 ```
 ##### To set the bullets to TextView just create a List of String and pass it to the above method and set the result of function to the TextView.
+
+## Insert bitmap in local storage in android 10 and above
+
+``` 
+val relativeLocation = Environment.DIRECTORY_PICTURES + File.pathSeparator + "PocketDeen"
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis().toString())
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, relativeLocation)
+                put(MediaStore.MediaColumns.IS_PENDING, 1)
+            }
+        }
+
+        val resolver = requireActivity().contentResolver
+        val bitmap = picasso.load(expetedUrl).get()
+
+        val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+```
+
