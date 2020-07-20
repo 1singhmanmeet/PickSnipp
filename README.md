@@ -75,5 +75,28 @@ val relativeLocation = Environment.DIRECTORY_PICTURES + File.pathSeparator + "Po
         val bitmap = picasso.load(expetedUrl).get()
 
         val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        try {
+
+            uri?.let { uri ->
+                val stream = resolver.openOutputStream(uri)
+
+                stream?.let { stream ->
+                    if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)) {
+                        throw IOException("Failed to save bitmap.")
+                    }
+                } ?: throw IOException("Failed to get output stream.")
+
+            } ?: throw IOException("Failed to create new MediaStore record")
+
+        } catch (e: IOException) {
+            if (uri != null) {
+                resolver.delete(uri, null, null)
+            }
+            throw IOException(e)
+        } finally {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+        }
 ```
 
