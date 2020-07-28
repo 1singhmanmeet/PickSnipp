@@ -56,7 +56,7 @@ public class BulletListBuilder {
 }
 
 ```
-##### To set the bullets to TextView just create a List of String and pass it to the above method and set the result of function to the TextView.
+#### To set the bullets to TextView just create a List of String and pass it to the above method and set the result of function to the TextView.
 
 ## Insert bitmap in local storage in android 10 and above
 
@@ -99,4 +99,30 @@ val relativeLocation = Environment.DIRECTORY_PICTURES + File.pathSeparator + "Po
                 contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
         }
 ```
+## Using Coroutine worker in WorkManager Android
+#### Dependencies
 
+```
+    
+    // for regular java
+    implementation "androidx.work:work-runtime:2.4.0"
+
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:2.4.0"
+```
+
+#### Example
+
+```
+
+class MyWork(context: Context, params: WorkerParameters) :
+        CoroutineWorker(context, params) {override suspend fun doWork(): Result = withContext(Dispatchers.IO) {return try {
+            // Do something
+            Result.success()
+        } catch (error: Throwable) {
+            Result.failure()
+        }
+    }
+}
+
+```
