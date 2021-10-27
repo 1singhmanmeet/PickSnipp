@@ -131,3 +131,13 @@ class MyWork(context: Context, params: WorkerParameters) :
     val intent=Intent()
     sampleLauncher.launch(sampleLauncher)
 ```
+
+## Using Imaghe Croping After onActivityResult() is depericated
+#### Dependencies https://github.com/TakuSemba/CropMe
+
+```
+
+    implementation 'com.github.takusemba:cropme:2.0.5'
+
+```
+
