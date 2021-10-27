@@ -61,43 +61,33 @@ public class BulletListBuilder {
 ## Insert bitmap in local storage in android 10 and above
 
 ``` 
-val relativeLocation = Environment.DIRECTORY_PICTURES + File.pathSeparator + "PocketDeen"
+fun saveImageInQ(bitmap: Bitmap): Uri {
+        val filename = "IMG_${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
+        var imageUri: Uri? = null
         val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis().toString())
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.MediaColumns.RELATIVE_PATH, relativeLocation)
-                put(MediaStore.MediaColumns.IS_PENDING, 1)
-            }
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Images.Media.IS_PENDING, 1)
         }
 
-        val resolver = requireActivity().contentResolver
-        val bitmap = picasso.load(expetedUrl).get()
+        //use application context to get contentResolver
+        val contentResolver = application.contentResolver
 
-        val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-
-        try {
-
-            uri?.let { uri ->
-                val stream = resolver.openOutputStream(uri)
-
-                stream?.let { stream ->
-                    if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)) {
-                        throw IOException("Failed to save bitmap.")
-                    }
-                } ?: throw IOException("Failed to get output stream.")
-
-            } ?: throw IOException("Failed to create new MediaStore record")
-
-        } catch (e: IOException) {
-            if (uri != null) {
-                resolver.delete(uri, null, null)
-            }
-            throw IOException(e)
-        } finally {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+        contentResolver.also { resolver ->
+            imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = imageUri?.let { resolver.openOutputStream(it) }
         }
+
+        fos?.use { bitmap.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+
+        contentValues.clear()
+        contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+        contentResolver.update(imageUri!!, contentValues, null, null)
+
+        return imageUri!!
+    }
 ```
 ## Using Coroutine worker in WorkManager Android
 #### Dependencies
