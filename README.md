@@ -116,3 +116,18 @@ class MyWork(context: Context, params: WorkerParameters) :
 }
 
 ```
+## Using ActivityResultsContracts API
+#### Dependencies
+
+```
+    implementation 'androidx.activity:activity-ktx:1.2.0-alpha07'
+    implementation 'androidx.fragment:fragment-ktx:1.3.0-alpha07
+```
+
+```
+    val sampleLauncher =registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        
+        }
+    val intent=Intent()
+    sampleLauncher.launch(sampleLauncher)
+```
