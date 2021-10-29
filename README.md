@@ -140,4 +140,5 @@ class MyWork(context: Context, params: WorkerParameters) :
     implementation 'com.github.takusemba:cropme:2.0.5'
 
 ```
-
+## Library compatibale with ActivityResultContacts
+https://github.com/CanHub/Android-Image-Cropper
